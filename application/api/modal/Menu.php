@@ -13,7 +13,7 @@ class Menu extends BaseModel
 {
 	public static function getMenu() {
 		$result = self::select();
-//		$result = 'sssss';
+
 		return $result;
 }
 }
