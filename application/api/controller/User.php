@@ -10,7 +10,7 @@ namespace app\api\controller;
 
 
 use app\api\modal\User as UserModel;
-use app\api\validate\SignInDataCheck;
+use app\api\validate\SignInValidate;
 use app\lib\exception\SuccessMessage;
 use app\lib\exception\UserException;
 use think\facade\Session;
@@ -26,7 +26,7 @@ class User
 	 */
 	public function signIn()
 	{
-		(new SignInDataCheck())->doCheck();
+		(new SignInValidate())->doCheck();
 		$params = request()->param();
 		$password = UserModel::getPasswordByAccount($params['account']);
 		if (!$password) {
@@ -62,7 +62,7 @@ class User
 	 */
 	public function signUp()
 	{
-		(new SignInDataCheck())->doCheck();
+		(new SignInValidate())->doCheck();
 		$params = request()->param();
 		$RSD = UserModel::checkNameRSD($params['account']);
 

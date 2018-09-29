@@ -9,7 +9,7 @@
 namespace app\api\validate;
 
 
-class SignInDataCheck extends BaseValidate
+class SignInValidate extends BaseValidate
 {
 	protected $rule = [
 		'account' => 'require|isNotEmpty|length:3,9|chsAlphaNum',
