@@ -18,7 +18,7 @@ class Menu
 {
 	/**
 	 * 获取目录
-	 * @route('api/menu')
+	 * @route('api/menu')->allowCrossDomain()
 	 */
 	public function getMenu()
 	{

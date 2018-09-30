@@ -16,8 +16,8 @@ class User extends BaseModel
 		return $name = self::where('account', '=', $name)->find();
 	}
 
-	static public function getPasswordByAccount($account)
+	static public function getUserByAccount($account)
 	{
-		return self::where('account', '=', $account)->find()->password;
+		return self::where('account', '=', $account)->find();
 	}
 }

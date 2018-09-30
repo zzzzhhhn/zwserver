@@ -12,7 +12,7 @@ namespace app\api\validate;
 class SignInValidate extends BaseValidate
 {
 	protected $rule = [
-		'account' => 'require|isNotEmpty|length:3,9|chsAlphaNum',
+		'account' => 'require|isNotEmpty|length:3,9|alphaNum',
 		'password' => 'require|isNotEmpty|length:32|alphaNum'
 	];
 	protected $message = [

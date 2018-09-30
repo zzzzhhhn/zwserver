@@ -22,18 +22,18 @@ class User
 	 * @throws SuccessMessage
 	 * @throws UserException
 	 * @throws \app\lib\exception\ParameterException
-	 * @route('api/signin')->allowCrossDomain()
+	 * @route('api/signin')
 	 */
 	public function signIn()
 	{
 		(new SignInValidate())->doCheck();
 		$params = request()->param();
-		$password = UserModel::getPasswordByAccount($params['account']);
-		if (!$password) {
+		$user = UserModel::getUserByAccount($params['account']);
+		if (!$user) {
 			$params = ['message' => '账号不存在', 'errorCode' => 60004];
 			throw new UserException($params);
 		}
-		if ($params['password'] === strrev($password)) {
+		if ($params['password'] === strrev($user['password'])) {
 			$chars = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
 				'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's',  
 't', 'u', 'v', 'w', 'x', 'y','z', 'A', 'B', 'C', 'D',  
@@ -46,7 +46,8 @@ class User
 				$token = $token.$chars[$value];
 			}
 			Session::set($token, $params['account']);
-			$params = ['message' => '登录成功', 'errorCode' => 0, 'data' => $token];
+			$user['token'] = $token;
+			$params = ['message' => '登录成功', 'errorCode' => 0, 'data' => $user];
 			throw new SuccessMessage($params);
 		} else {
 			$params = ['message' => '密码错误', 'errorCode' => 60003];
@@ -56,9 +57,10 @@ class User
 
 	/**
 	 * 注册
+	 * @throws SuccessMessage
 	 * @throws UserException
 	 * @throws \app\lib\exception\ParameterException
-	 * @route('api/signup')->allowCrossDomain()
+	 * @route('api/signup')->header('Access-Control-Allow-Origin','http://localhost:8080')->header('Access-Control-Allow-Credentials', 'true')->allowCrossDomain()
 	 */
 	public function signUp()
 	{
