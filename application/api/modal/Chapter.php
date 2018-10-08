@@ -11,8 +11,9 @@ namespace app\api\modal;
 
 class Chapter extends BaseModel
 {
-	public static function getContentByIndex($id)
+	public static function getChapterByCatalog()
 	{
+		$id = request()->param()['id'];
 		return self::where('catalog_id','=',$id)->find();
 	}
 }

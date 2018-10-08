@@ -30,9 +30,10 @@ class Novel extends BaseModel
 	 * @throws \think\db\exception\ModelNotFoundException
 	 * @throws \think\exception\DbException
 	 */
-	public static function getNovelbyMenuId($id)
+	public static function getNovelbyMenuId()
 	{
-		return self::where('menu_id', '=', $id)->with('catalog')->find($id);
+		$id = request()->param()['id'];
+		return self::where('menu_id', '=', $id)->with('catalog')->find();
 	}
 
 	/**

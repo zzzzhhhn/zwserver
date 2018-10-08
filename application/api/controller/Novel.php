@@ -34,18 +34,36 @@ class Novel
 	 * @throws \think\exception\DbException
 	 * @route('api/novel/:id')
 	 */
-	public function getNovel($id)
+	public function getNovel()
 	{
 		(new IDValidate())->doCheck();
 
-		$novel = NovelModel::getNovelbyMenuId($id);
+		$novel = NovelModel::getNovelbyMenuId();
 
 		if (!$novel) {
 			throw new NovelException();
+		} else {
+			throw new SuccessMessage(['data' => $novel]);
 		}
-
-		return $novel;
 	}
+
+	/**
+	 * 获取小说目录列表
+	 * @throws NovelException
+	 * @throws SuccessMessage
+	 * @throws \app\lib\exception\ParameterException
+	 */
+	public function getCatalogsByNovelId()
+{
+	(new IDValidate())->doCheck();
+	$catalogs = Catalog::getCatalogsByNovelId();
+
+	if (!$catalogs) {
+		throw new NovelException();
+	}else {
+		throw new SuccessMessage(['data' => $catalogs]);
+	}
+}
 
 	/**
 	 * 获取章节内容
@@ -55,17 +73,17 @@ class Novel
 	 * @throws \app\lib\exception\ParameterException
 	 * @route('api/chapter/:id')
 	 */
-	public function getChapter($id)
+	public function getChapter()
 	{
 		(new IDValidate())->doCheck();
 
-		$chapter = Chapter::getContentByIndex($id);
+		$chapter = Chapter::getChapterByCatalog();
 
 		if (!$chapter) {
 			throw new ChapterException();
+		} else {
+			throw new SuccessMessage(['data' => $chapter]);
 		}
-
-		return $chapter;
 	}
 
 	/**
@@ -145,5 +163,22 @@ class Novel
 				'message' => '内容保存失败'
 			]);
 		}
+	}
+
+	public function uploadNovelImg()
+	{
+		$file = @$_FILES['file'];//得到传输的数据
+		$name = $file['name'];//文件名
+		$ex = strtolower(substr($name,strrpos($name,'.'))); //扩展名
+		$upload_path = "../public/uploads/"; //上传文件的存放路径
+		$new_name = rand().rand().$ex;
+//开始移动文件到相应的文件夹
+		if(move_uploaded_file($file['tmp_name'],$upload_path.$new_name)){
+			throw new SuccessMessage(['data' => $new_name]);
+		}else{
+			// 上传失败获取错误信息
+			throw new NovelException(['message' => $file->getError()]);
+		}
+
 	}
 }

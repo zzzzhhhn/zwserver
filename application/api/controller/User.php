@@ -11,6 +11,7 @@ namespace app\api\controller;
 
 use app\api\modal\User as UserModel;
 use app\api\validate\SignInValidate;
+use app\api\validate\TokenValidate;
 use app\lib\exception\SuccessMessage;
 use app\lib\exception\UserException;
 use think\facade\Session;
@@ -45,7 +46,7 @@ class User
 			foreach ($arr as $value) {
 				$token = $token.$chars[$value];
 			}
-			Session::set($token, $params['account']);
+			Session::set($token, $user);
 			$user['token'] = $token;
 			$params = ['message' => '登录成功', 'errorCode' => 0, 'data' => $user];
 			throw new SuccessMessage($params);
@@ -82,6 +83,22 @@ class User
 			} else {
 				throw new SuccessMessage();
 			}
+		}
+	}
+
+	public function getUserInfoByToken()
+	{
+		(new TokenValidate())->doCheck();
+
+		$token = request()->param()['token'];
+
+		$user = Session::get($token);
+
+		if (!$user) {
+			$params = ['message' => 'token已失效，请重新登陆', 'errorCode' => -10000];
+			throw new UserException($params);
+		} else {
+			throw new SuccessMessage(['data' => $user]);
 		}
 	}
 }

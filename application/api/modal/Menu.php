@@ -27,6 +27,12 @@ class Menu extends BaseModel
 		return self::where('enabled', '=', 1)->select();
 	}
 
+	public static function getRecycleMenu()
+	{
+		$type = request()->param()['type'];
+		return self::where('type', '=', $type)->where('enabled', '=', 0)->select();
+	}
+
 	/**
 	 * 验证名称是否已存在
 	 * @param $name

@@ -12,9 +12,9 @@ namespace app\api\validate;
 class MenuValidate extends BaseValidate
 {
 	protected $rule = [
-		'name' => 'require|isNotEmpty|chsAlphaNum',
+		'name' => 'require|isNotEmpty',
 		'type' => 'require|isNotEmpty|number',
-		'url' => 'requireIfTypeIsGame|isNotEmpty|alphaDash'
+		'url' => 'alphaDash'
 	];
 
 	protected $message = [
@@ -23,13 +23,4 @@ class MenuValidate extends BaseValidate
 		'url' => '路由错误'
 	];
 
-	protected function requireIfTypeIsGame($value)
-	{
-		$param = request()->param();
-		if ($param['type'] === 2 && !$value) {
-			return false;
-		} else {
-			return true;
-		}
-	}
 }

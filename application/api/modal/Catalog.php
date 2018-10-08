@@ -14,7 +14,11 @@ use app\lib\exception\SuccessMessage;
 
 class Catalog extends BaseModel
 {
-	protected $hidden = ['novel_id'];
+	public static function getCatalogsByNovelId()
+	{
+		$id = request()->param()['id'];
+		return self::where('novel_id', '=', $id)->where('enabled', '=', 1)->select();
+	}
 
 	/**
 	 * 验证章节名称是否已存在

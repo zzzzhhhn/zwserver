@@ -13,6 +13,7 @@ use app\api\validate\IDValidate;
 use app\api\validate\MenuValidate;
 use app\lib\exception\MenuException;
 use app\lib\exception\SuccessMessage;
+use think\facade\Session;
 
 class Menu
 {
@@ -28,6 +29,23 @@ class Menu
 			throw new MenuException();
 		}
 		return $menus;
+	}
+
+	/**
+	 * 获取已删除目录
+	 * @return array|\PDOStatement|string|\think\Collection
+	 * @throws MenuException
+	 */
+	public function getRecycleMenu()
+	{
+
+		$menus = menuModel::getRecycleMenu();
+
+		if (!$menus) {
+			throw new MenuException();
+		} else {
+			throw new SuccessMessage(['data' => $menus]);
+		}
 	}
 
 	/**
@@ -49,7 +67,7 @@ class Menu
 	public function updateMenu()
 	{
 		(new MenuValidate())->doCheck();
-		(new IDValidate())->check();
+		(new IDValidate())->doCheck();
 
 		menuModel::createOrUpdate(2);
 
@@ -61,7 +79,7 @@ class Menu
 	 */
 	public function deleteMenu()
 	{
-		(new IDValidate())->check();
+		(new IDValidate())->doCheck();
 
 		menuModel::deleteOrRecycle(0);
 
@@ -73,7 +91,7 @@ class Menu
 	 */
 	public function recycleMenu()
 	{
-		(new IDValidate())->check();
+		(new IDValidate())->doCheck();
 
 		menuModel::deleteOrRecycle(1);
 
